@@ -1,24 +1,19 @@
 package com.cnkvha.BukkitPE.EventSystem;
 
-import java.util.EnumMap;
-import java.util.List;
 import java.util.Vector;
 
-public class EventManager {
-	/*
+public class BaseManager {
 	public static Vector lv0Handlers = new Vector();
 	public static Vector lv1Handlers = new Vector();
 	public static Vector lv2Handlers = new Vector();
 	public static Vector lv3Handlers = new Vector();
 	public static Vector lv4Handlers = new Vector();
 	public static Vector MonitorHandlers = new Vector<>();
-	*/
 	
 	public static boolean registerListener(EventPriority priority, BaseListener listener){
 		if(!(listener instanceof BaseEvent)){
 			return(false);
 		}
-		/*
 		switch(priority){
 		case LOWEST:
 			if(lv0Handlers.contains(listener)) return(false);
@@ -45,8 +40,17 @@ public class EventManager {
 			MonitorHandlers.add(listener);
 			return(true);
 		}
-		*/
 		return(false);
 	}
+	
+	public static void unregisterAllListeners(){
+		lv0Handlers = new Vector();
+		lv1Handlers = new Vector();
+		lv2Handlers = new Vector();
+		lv3Handlers = new Vector();
+		lv4Handlers = new Vector();
+		MonitorHandlers = new Vector<>();
+	}
+	
 	
 }

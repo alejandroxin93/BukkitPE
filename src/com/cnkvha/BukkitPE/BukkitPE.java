@@ -14,8 +14,6 @@ public class BukkitPE {
 		Definations.ServerIP = (String)Definations.config.get("server-ip");
 		Definations.ServerPort = Integer.parseInt(Definations.config.get("server-port").toString());
 		Log.Info("Starting Minecraft PE server on UDP port " + Definations.config.get("server-port"));
-		Definations.socket = new UDPListener(Definations.ServerIP, Definations.ServerPort);
-		Definations.socket.registerRecvEvent(new RecvListener());
 		Definations.mainThread = new MainThread();
 		Definations.mainThread.start();
 		Log.Debug("Entering console loop...");
@@ -25,5 +23,7 @@ public class BukkitPE {
 			input = scanner.nextLine();
 			Log.Info("Running command: " + input);
 		}
+		//TODO: Add command event
+		//scanner.close();
 	}
 }

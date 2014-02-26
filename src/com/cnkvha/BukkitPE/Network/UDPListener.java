@@ -8,6 +8,7 @@ import java.util.Vector;
 import com.cnkvha.BukkitPE.Debugging.Log;
 import com.cnkvha.BukkitPE.Network.EventSystem.UDPRecvEvent;
 import com.cnkvha.BukkitPE.Network.EventSystem.UDPRecvEventListener;
+import com.cnkvha.BukkitPE.Utils.Helper;
 
 public class UDPListener extends Thread {
 	private SocketAddress localAddr;
@@ -39,13 +40,19 @@ public class UDPListener extends Thread {
 		this.repo.addElement(l);
 	}
 	
-	public void sendTo(byte[] buff, String ip, int port) throws IOException{
+	public void sendTo(byte[] buff, String ip, int port) throws Exception{
+		Log.Debug("Sending: \n" + Helper.toHex(buff));
 		DatagramPacket p = new DatagramPacket(buff, buff.length, InetAddress.getByName(ip), port);
+		this.socket.send(p);
+	}
+	public void sendTo(byte[] buff, SocketAddress addr) throws Exception{
+		Log.Debug("Sending: \n" + Helper.toHex(buff));
+		DatagramPacket p = new DatagramPacket(buff, buff.length, addr);
 		this.socket.send(p);
 	}
 	
 	@Override
-	public void run() {
+	public synchronized void run() {
 		// TODO Auto-generated method stub
 		Log.Debug("Socket " + this.IPAddr + ":" + this.Port + " started! ");
 		byte[] buff;
