@@ -1,5 +1,10 @@
 package com.cnkvha.BukkitPE;
 
-public class Player {
+import java.net.SocketAddress;
 
+public class Player {
+	public SocketAddress clientAddr;
+	public Player(SocketAddress addr){
+		this.clientAddr = addr;
+	}
 }
