@@ -1,6 +1,7 @@
 package com.cnkvha.BukkitPE;
 
 import java.net.DatagramPacket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 
 import com.cnkvha.BukkitPE.Debugging.Log;
@@ -34,13 +35,25 @@ public class RecvListener implements UDPRecvEventListener {
 			response.writeLong(Constants.SERVERID);
 			response.writeBlock(Constants.MAGIC);
 			response.writeString("MCCPP;Demo;Test");
-			try {
-				Definations.socket.sendTo(response.getPacket(), event.getPacket().getSocketAddress());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.sendData(response.getPacket(), event.getPacket().getSocketAddress());
 			break;
+		case 0x05:
+			response = new PacketWriter(0x06);
+			response.writeBlock(Constants.MAGIC);
+			response.writeLong(Constants.SERVERID);
+			response.writeByte((byte) 0x00);
+			response.writeShort((short) 1155);
+			this.sendData(response.getPacket(), event.getPacket().getSocketAddress());
+			break;
+		}
+	}
+	
+	public void sendData(byte[] packet, SocketAddress addr){
+		try {
+			Definations.socket.sendTo(packet, addr);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

@@ -58,6 +58,10 @@ public class PacketWriter {
 		this.writeBlock(value.getBytes(Charset.forName("UTF-8")));
 	}
 	
+	public void writeNullBytes(int len){
+		this.writeBlock(new byte[len]);
+	}
+	
 	public void writeBlock(byte[] block){
 		if(block == null) return;
 		int start = this.packet.length;

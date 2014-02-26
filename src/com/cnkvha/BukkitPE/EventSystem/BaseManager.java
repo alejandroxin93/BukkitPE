@@ -53,4 +53,10 @@ public class BaseManager {
 	}
 	
 	
+	/* WE HAVE TO IMPLEMENT THIS IN EACH EVENTMANAGER */
+	
+	public static boolean callEvent() {
+		return(true);
+	}
+	
 }
