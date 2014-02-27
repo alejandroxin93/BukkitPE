@@ -11,6 +11,7 @@ import com.cnkvha.BukkitPE.Network.EventSystem.UDPRecvEvent;
 import com.cnkvha.BukkitPE.Network.EventSystem.UDPRecvEventListener;
 import com.cnkvha.BukkitPE.Utils.Constants;
 import com.cnkvha.BukkitPE.Utils.Definations;
+import com.cnkvha.BukkitPE.Utils.Helper;
 
 public class RecvListener implements UDPRecvEventListener {
 	
@@ -43,6 +44,24 @@ public class RecvListener implements UDPRecvEventListener {
 			response.writeLong(Constants.SERVERID);
 			response.writeByte((byte) 0x00);
 			response.writeShort((short) 1155);
+			this.sendData(response.getPacket(), event.getPacket().getSocketAddress());
+			break;
+		case 0x07:
+			reader.readBlock(16);
+			reader.readBlock(5);
+			int port = (int)reader.readShort();
+			reader.readShort();
+			long cid = reader.readLong();
+			if(!(Definations.clients.containsKey(Helper.getClientKey(event.getPacket().getSocketAddress())))){
+				Player player = new Player(event.getPacket().getSocketAddress(), Helper.getClientKey(event.getPacket().getSocketAddress()), cid);
+				Definations.clients.put(Helper.getClientKey(event.getPacket().getSocketAddress()), player);
+			}
+			response = new PacketWriter(0x08);
+			response.writeBlock(Constants.MAGIC);
+			response.writeLong(Constants.SERVERID);
+			response.writeShort((short) event.getPacket().getPort());
+			response.writeShort((short) 1155);
+			response.writeByte((byte) 0x00);
 			this.sendData(response.getPacket(), event.getPacket().getSocketAddress());
 			break;
 		}

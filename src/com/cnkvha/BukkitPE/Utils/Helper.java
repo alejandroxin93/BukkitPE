@@ -1,5 +1,7 @@
 package com.cnkvha.BukkitPE.Utils;
 
+import java.net.SocketAddress;
+
 public class Helper {
 	public static String toHex(byte[] digest) {
 	    StringBuilder sb = new StringBuilder();
@@ -8,4 +10,10 @@ public class Helper {
 	    }
 	    return sb.toString();
 	}
+	
+	public static String getClientKey(SocketAddress addr){
+		if(addr == null) return(null);
+		return(addr.toString());
+	}
+	
 }

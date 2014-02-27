@@ -1,6 +1,11 @@
 package com.cnkvha.BukkitPE.Utils;
 
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
+
 import com.cnkvha.BukkitPE.MainThread;
+import com.cnkvha.BukkitPE.Player;
 import com.cnkvha.BukkitPE.Network.UDPListener;
 
 public class Definations {
@@ -12,5 +17,7 @@ public class Definations {
 	public static UDPListener socket;
 	
 	public static MainThread mainThread;
+	
+	public static HashMap<String, Player> clients = new HashMap<String, Player>();
 	
 }

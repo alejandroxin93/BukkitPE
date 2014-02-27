@@ -17,4 +17,9 @@ public class CancellableEvent extends BaseEvent {
 			this.cancelStatus = CancelStatus.NOT_CANCELLED;
 		}
 	}
+	
+	public void setForceCancel(){
+		this.cancelStatus = CancelStatus.FORCE_CANCELLED;
+	}
+	
 }
