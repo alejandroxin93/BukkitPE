@@ -62,7 +62,7 @@ public class Player {
 	public void handleCustomPacket(byte[] packet){
 		PacketReader reader = new PacketReader(packet);
 		byte pid = reader.readByte();
-		Log.Debug("Got encapsulated packet: 0x" + Integer.toHexString((int)pid);
+		Log.Debug("Got encapsulated packet: 0x" + Integer.toHexString((int)pid));
 		switch(pid){
 		case 0x09:
 			break;
