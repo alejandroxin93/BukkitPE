@@ -69,6 +69,16 @@ public class PacketReader {
 		this.position += 8;
 		return(((long) (b[0] << 56 | b[1] << 48 | b[2] << 40 | b[3] << 32 | b[4] << 24 | b[5] << 16 | b[6] << 8 | b[7] )) & 0xFFFFFFFFL);
 	}
+	
+	public int readTriad(){
+		if(this.checkLast(3) == false) return(0);
+		int[] b = new int[3];
+		b[0] = (0x000000FF & ((int)this.packet[this.position]));
+		b[1] = (0x000000FF & ((int)this.packet[this.position + 1]));
+		b[2] = (0x000000FF & ((int)this.packet[this.position] + 2));
+		this.position += 3;
+		return((int)(b[2] << 24  | b[1] << 16 | b[2]) & 0xFFFFFFFF);
+	}
     
 	public boolean checkLast(long last){
 		if(this.packet.length - this.position < last){

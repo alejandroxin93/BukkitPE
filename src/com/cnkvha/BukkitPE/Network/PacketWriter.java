@@ -49,6 +49,14 @@ public class PacketWriter {
 		this.writeBlock(data);
 	}
 	
+	public void writeTriad(int value){
+		byte[] data = new byte[3];
+		data[0] = (byte)((value >> 24) & 0xFF);
+		data[1] = (byte)((value >> 16) & 0xFF);
+		data[2] = (byte)((value) & 0xFF);
+		this.writeBlock(data);
+	}
+	
 	public void writeString(String value){
 		if(value.length() == 0){
 			this.writeShort((short) 0x00);

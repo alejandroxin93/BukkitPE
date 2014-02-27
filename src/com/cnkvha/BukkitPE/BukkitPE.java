@@ -9,6 +9,9 @@ import com.cnkvha.BukkitPE.Network.UDPListener;
 import com.cnkvha.BukkitPE.Utils.*;
 
 public class BukkitPE {
+	
+	public static boolean isServerStopping = false;
+	
 	public static void main(String[] args) throws Exception{
 		Definations.config = new Config("server.properties", Constants.SERVERPROPERTIES_PRESET);
 		Definations.ServerIP = (String)Definations.config.get("server-ip");
@@ -19,11 +22,21 @@ public class BukkitPE {
 		Log.Debug("Entering console loop...");
 		Scanner scanner = new Scanner(System.in);
 		String input = "";
-		while(true){
+		while(isServerStopping == false){
 			input = scanner.nextLine();
 			Log.Info("Running command: " + input);
 		}
 		//TODO: Add command event
-		//scanner.close();
+		scanner.close();
 	}
+	
+	
+	public static void runCommand(String fullCommand){
+		String[] cmd = fullCommand.split(" ");
+		switch(cmd[0]){
+		case "stop":
+			isServerStopping = true;
+		}
+	}
+	
 }

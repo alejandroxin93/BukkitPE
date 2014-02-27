@@ -81,7 +81,7 @@ public class RecvListener implements UDPRecvEventListener {
 		case 0x8E:
 		case 0x8F:
 			if(!(Definations.clients.containsKey(event.getPacket().getSocketAddress().toString()))) return;
-			
+			Definations.clients.get(event.getPacket().getSocketAddress().toString()).handleDataPacket(event.getData());
 			break;
 		}
 	}
