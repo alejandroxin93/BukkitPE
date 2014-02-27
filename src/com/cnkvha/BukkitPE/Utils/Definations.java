@@ -17,6 +17,7 @@ public class Definations {
 	public static UDPListener socket;
 	
 	public static MainThread mainThread;
+	public static TimeoutDetector timeoutDetector;
 	
 	public static HashMap<String, Player> clients = new HashMap<String, Player>();
 	
