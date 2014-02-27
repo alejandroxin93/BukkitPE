@@ -7,7 +7,7 @@ public class CancellableEvent extends BaseEvent {
 	 * 1 = Cancelled
 	 * 2 = Force Cancelled
 	 */
-	public CancelStatus cancelStatus = 0;
+	public CancelStatus cancelStatus = CancelStatus.NOT_CANCELLED;
 	
 	public void setCancelled(boolean stat){
 		if(this.cancelStatus == CancelStatus.FORCE_CANCELLED) return;

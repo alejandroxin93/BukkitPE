@@ -18,6 +18,8 @@ public class MainThread extends Thread{
 			e.printStackTrace();
 			System.exit(-1);
 		}
+		Log.Debug("Loading APIs...");
+		APIManager.loadAllAPIs();
 		Log.Debug("Starting up timeout detector...");
 		Definations.timeoutDetector = new TimeoutDetector();
 		Definations.timeoutDetector.start();

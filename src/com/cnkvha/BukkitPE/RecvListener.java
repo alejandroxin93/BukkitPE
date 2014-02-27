@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 
+import com.cnkvha.BukkitPE.APIs.PlayerAPI;
 import com.cnkvha.BukkitPE.Debugging.Log;
 import com.cnkvha.BukkitPE.Network.PacketReader;
 import com.cnkvha.BukkitPE.Network.PacketWriter;
@@ -52,9 +53,9 @@ public class RecvListener implements UDPRecvEventListener {
 			int port = (int)reader.readShort();
 			reader.readShort();
 			long cid = reader.readLong();
-			if(!(Definations.clients.containsKey(Helper.getClientKey(event.getPacket().getSocketAddress())))){
+			if(!(((PlayerAPI)APIManager.get("player")).clients.containsKey(Helper.getClientKey(event.getPacket().getSocketAddress())))){
 				Player player = new Player(event.getPacket().getSocketAddress(), Helper.getClientKey(event.getPacket().getSocketAddress()), cid);
-				Definations.clients.put(Helper.getClientKey(event.getPacket().getSocketAddress()), player);
+				((PlayerAPI)APIManager.get("player")).clients.put(Helper.getClientKey(event.getPacket().getSocketAddress()), player);
 			}
 			response = new PacketWriter(0x08);
 			response.writeBlock(Constants.MAGIC);
@@ -80,8 +81,8 @@ public class RecvListener implements UDPRecvEventListener {
 		case 0x8D:
 		case 0x8E:
 		case 0x8F:
-			if(!(Definations.clients.containsKey(event.getPacket().getSocketAddress().toString()))) return;
-			Definations.clients.get(event.getPacket().getSocketAddress().toString()).handleDataPacket(event.getData());
+			if(!(((PlayerAPI)APIManager.get("player")).clients.containsKey(event.getPacket().getSocketAddress().toString()))) return;
+			((PlayerAPI)APIManager.get("player")).clients.get(event.getPacket().getSocketAddress().toString()).handleDataPacket(event.getData());
 			break;
 		}
 	}

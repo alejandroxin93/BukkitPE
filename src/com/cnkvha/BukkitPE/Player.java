@@ -4,15 +4,18 @@ import java.net.SocketAddress;
 import java.sql.Time;
 import java.util.Date;
 
+import com.cnkvha.BukkitPE.APIs.PlayerAPI;
 import com.cnkvha.BukkitPE.Debugging.Log;
 import com.cnkvha.BukkitPE.Network.PacketReader;
 import com.cnkvha.BukkitPE.Network.PacketWriter;
 import com.cnkvha.BukkitPE.Utils.Definations;
+import com.sun.java.util.jar.pack.PackerImpl;
 
 public class Player {
 	public SocketAddress clientAddr;
 	public String ckey;
 	public long cid;
+	public long session = 0x0000000000000000;
 	
 	public String username = "";
 	
@@ -34,7 +37,8 @@ public class Player {
 		if(this.loggedIn){
 			//TODO: Send 0x15 packet
 		}
-		Definations.clients.remove(this.ckey);
+		PlayerAPI playerAPI= (PlayerAPI)APIManager.get("player");
+		playerAPI.clients.remove(this.ckey);
 		Log.Info("Player " + this.username + "[" + this.clientAddr.toString() + "] left the game, reason: " + reason);
 	}
 	
@@ -61,10 +65,33 @@ public class Player {
 	
 	public void handleCustomPacket(byte[] packet){
 		PacketReader reader = new PacketReader(packet);
+		PacketWriter response;
 		byte pid = reader.readByte();
 		Log.Debug("Got encapsulated packet: 0x" + Integer.toHexString((int)pid));
 		switch(pid){
 		case 0x09:
+			this.cid = reader.readLong();
+			this.session = reader.readLong();
+			reader.readByte(); //unknown1
+			response = new PacketWriter(0x09);
+			response.writeBlock(new byte[]{0x04, 0x3F, 0x57, (byte) 0xFE});
+			response.writeBlock(new byte[]{(byte) 0xCD});
+			response.writeBlock(new byte[]{(byte) 0xF5, (byte) 0xFF, (byte) 0xFF, 0xF5});
+			response.writeBlock(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
+			response.writeBlock(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
+			response.writeBlock(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
+			response.writeBlock(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
+			response.writeBlock(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
+			response.writeBlock(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
+			response.writeBlock(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
+			response.writeBlock(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
+			response.writeBlock(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
+			response.writeBlock(new byte[0x00, 0x00]);
+			response.writeLong(this.session);
+			response.writeLong(this.session);
+			
+			//TODO: Add send encapsulated packets. 
+			//this.sendEncapPacket(response);
 			break;
 		}
 	}
@@ -88,7 +115,6 @@ public class Player {
 		ack.writeTriad(pNum);
 		this.sendPacket(ack);
 	}
-	
 	
 	
 	public void sendPacket(PacketWriter pk){
