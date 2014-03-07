@@ -19,7 +19,7 @@ public class Player {
 	
 	public String username = "";
 	
-	private int packetNum = 0;
+	private int packetNum = 0x000000;
 	public long lastRecv = 0;
 
 	private boolean loggedIn = false;
@@ -43,10 +43,9 @@ public class Player {
 	}
 	
 	public void handleDataPacket(byte[] packet){
-		Log.Debug("handling datapacket");
 		PacketReader reader = new PacketReader(packet);
 		reader.readByte(); //Skip PID section
-		this.packetNum = reader.readTriadReverse();
+		this.packetNum = reader.readTriad();
 		this.sendACK(this.packetNum); //Send ACK
 		byte encapsulateType = reader.readByte();
 		int len = 0;
@@ -55,27 +54,6 @@ public class Player {
 		case 0x00:
 			while(true){
 				len = reader.readShort();
-				if(len == 0) break;
-				len = len / 8;
-				customPacket = reader.readBlock(len);
-				this.handleCustomPacket(customPacket);
-			}
-			break;
-		case 0x40:
-			while(true){
-				len = reader.readShort();
-				reader.readTriad();
-				if(len == 0) break;
-				len = len / 8;
-				customPacket = reader.readBlock(len);
-				this.handleCustomPacket(customPacket);
-			}
-			break;
-		case 0x60:
-			while(true){
-				len = reader.readShort();
-				reader.readTriad();
-				reader.readUnsignedInt();
 				if(len == 0) break;
 				len = len / 8;
 				customPacket = reader.readBlock(len);
@@ -95,7 +73,7 @@ public class Player {
 			this.cid = reader.readLong();
 			this.session = reader.readLong();
 			reader.readByte(); //unknown1
-			response = new PacketWriter(0x10);
+			response = new PacketWriter(0x09);
 			response.writeBlock(new byte[]{0x04, 0x3F, 0x57, (byte) 0xFE});
 			response.writeBlock(new byte[]{(byte) 0xCD});
 			response.writeBlock(new byte[]{(byte) 0xF5, (byte) 0xFF, (byte) 0xFF, (byte) 0xF5});
@@ -124,26 +102,24 @@ public class Player {
 	
 	
 	
-	
+	public void sendEncapPacket(PacketWriter payload){
+		PacketWriter pk = new PacketWriter(0x84);
+		pk.writeTriadReverse(this.packetNum);
+		pk.writeByte((byte) 0x00);
+		pk.writeShort((short) (payload.getPacket().length * 8));
+		pk.writeBlock(payload.getPacket());
+		this.sendPacket(pk);
+	}
 	
 	
 	public void sendACK(int pNum){
 		PacketWriter ack = new PacketWriter(0xC0);
 		ack.writeShort((short) 0x01);
-		ack.writeByte((byte) 0x00);
-		ack.writeTriad(0x000000);  //Muhahahah!
-		ack.writeTriadReverse(this.packetNum);
+		ack.writeByte((byte) 0x01);
+		ack.writeTriad(pNum);
 		this.sendPacket(ack);
 	}
 	
-	public void sendEncapPacket(PacketWriter pk){
-		this.packetNum++;
-		PacketWriter buff = new PacketWriter(0x84);
-		buff.writeTriadReverse(this.packetNum);
-		buff.writeShort((short)((pk.getPacket().length * 8) & 0xFFFF));
-		buff.writeBlock(pk.getPacket());
-		this.sendPacket(buff);
-	}
 	
 	public void sendPacket(PacketWriter pk){
 		try {

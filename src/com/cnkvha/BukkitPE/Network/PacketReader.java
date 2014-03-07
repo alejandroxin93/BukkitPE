@@ -1,9 +1,7 @@
 package com.cnkvha.BukkitPE.Network;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-
-import com.cnkvha.BukkitPE.Debugging.Log;
-import com.cnkvha.BukkitPE.Utils.Helper;
 
 public class PacketReader {
 	public byte[] packet;
@@ -76,26 +74,21 @@ public class PacketReader {
 	public int readTriad(){
 		if(this.checkLast(3) == false) return(0);
 		byte[] b = new byte[3];
-		b[0] = (byte) (0xFF & this.packet[this.position]);
+		b[0] = (byte) (0xFF & (this.packet[this.position]));
 		b[1] = (byte) (0xFF & (this.packet[this.position + 1]));
-		b[2] = (byte) (0xFF & this.packet[this.position] + 2);
+		b[2] = (byte) (0xFF & (this.packet[this.position] + 2));
 		this.position += 3;
-		Log.Debug("Reading triad from: " + Helper.toHex(this.packet));
-		Log.Debug("Read Triad: " + Integer.toString((int)(0x00 << 36 | b[2] << 24  | b[1] << 16 | b[2]) & 0xFFFFFFFF));
-		return((int)(b[2] << 24  | b[1] << 16 | b[0]) & 0xFFFFFFFF);
+		return(Math.abs(ByteBuffer.wrap(b).asShortBuffer().get()));
 	}
 	public int readTriadReverse(){
 		if(this.checkLast(3) == false) return(0);
 		byte[] b = new byte[3];
-		b[0] = (byte) (0xFF & this.packet[this.position]);
+		b[2] = (byte) (0xFF & (this.packet[this.position]));
 		b[1] = (byte) (0xFF & (this.packet[this.position + 1]));
-		b[2] = (byte) (0xFF & this.packet[this.position] + 2);
+		b[0] = (byte) (0xFF & (this.packet[this.position] + 2));
 		this.position += 3;
-		Log.Debug("Reading triad from: " + Helper.toHex(this.packet));
-		Log.Debug("Read Triad: " + Integer.toString((int)(0x00 << 36 | b[2] << 24  | b[1] << 16 | b[2]) & 0xFFFFFFFF));
-		return((int)(b[0] << 24  | b[1] << 16 | b[2]) & 0xFFFFFFFF);
+		return(Math.abs(ByteBuffer.wrap(b).asShortBuffer().get()));
 	}
-	
     
 	public boolean checkLast(long last){
 		if(this.packet.length - this.position < last){

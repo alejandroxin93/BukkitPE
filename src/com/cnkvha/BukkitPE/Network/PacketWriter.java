@@ -3,9 +3,6 @@ package com.cnkvha.BukkitPE.Network;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import com.cnkvha.BukkitPE.Debugging.Log;
-import com.cnkvha.BukkitPE.Utils.Helper;
-
 public class PacketWriter {
 	private byte[] packet;
 	public PacketWriter(byte pid){
@@ -57,7 +54,6 @@ public class PacketWriter {
 		data[0] = (byte)((value >> 24) & 0xFF);
 		data[1] = (byte)((value >> 16) & 0xFF);
 		data[2] = (byte)((value) & 0xFF);
-		Log.Debug("Writing Triad(" + Integer.toString(value) + "): " + Helper.toHex(data));
 		this.writeBlock(data);
 	}
 	public void writeTriadReverse(int value){
@@ -65,10 +61,8 @@ public class PacketWriter {
 		data[2] = (byte)((value >> 24) & 0xFF);
 		data[1] = (byte)((value >> 16) & 0xFF);
 		data[0] = (byte)((value) & 0xFF);
-		Log.Debug("Writing Triad(" + Integer.toString(value) + "): " + Helper.toHex(data));
 		this.writeBlock(data);
 	}
-	 
 	
 	public void writeString(String value){
 		if(value.length() == 0){
