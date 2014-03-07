@@ -27,7 +27,7 @@ public class RecvListener implements UDPRecvEventListener {
 		PacketReader reader = new PacketReader(packet);
 		PacketWriter response;
 		int pid = reader.readByte() & 0xFF;
-		Log.Debug("Got packet 0x" + Integer.toHexString(pid));
+		Log.Debug("Got packet 0x" + Integer.toHexString(pid) + " >>\n" + Helper.toHex(packet) + "\n================");
 		switch(pid){
 		case 0x01:
 			long pingID = reader.readLong();
@@ -36,7 +36,7 @@ public class RecvListener implements UDPRecvEventListener {
 			response.writeLong(pingID);
 			response.writeLong(Constants.SERVERID);
 			response.writeBlock(Constants.MAGIC);
-			response.writeString("MCCPP;Demo;Test");
+			response.writeString("MCCPP;Demo;" + Definations.config.get("server-name"));
 			this.sendData(response.getPacket(), event.getPacket().getSocketAddress());
 			break;
 		case 0x05:

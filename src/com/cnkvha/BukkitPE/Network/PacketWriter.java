@@ -1,5 +1,6 @@
 package com.cnkvha.BukkitPE.Network;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
@@ -71,6 +72,10 @@ public class PacketWriter {
 		}
 		this.writeShort((short) (value.length() & 0xFFFF));
 		this.writeBlock(value.getBytes(Charset.forName("UTF-8")));
+	}
+	
+	public void writeFloat(float value){
+		this.writeBlock(ByteBuffer.allocate(8).putFloat(value).array());
 	}
 	
 	public void writeNullBytes(int len){

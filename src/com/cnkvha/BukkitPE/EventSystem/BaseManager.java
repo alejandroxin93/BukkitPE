@@ -3,12 +3,12 @@ package com.cnkvha.BukkitPE.EventSystem;
 import java.util.Vector;
 
 public class BaseManager {
-	public static Vector lv0Handlers = new Vector();
-	public static Vector lv1Handlers = new Vector();
-	public static Vector lv2Handlers = new Vector();
-	public static Vector lv3Handlers = new Vector();
-	public static Vector lv4Handlers = new Vector();
-	public static Vector MonitorHandlers = new Vector<>();
+	public static Vector<BaseListener> lv0Handlers = new Vector<BaseListener>();
+	public static Vector<BaseListener> lv1Handlers = new Vector<BaseListener>();
+	public static Vector<BaseListener> lv2Handlers = new Vector<BaseListener>();
+	public static Vector<BaseListener> lv3Handlers = new Vector<BaseListener>();
+	public static Vector<BaseListener> lv4Handlers = new Vector<BaseListener>();
+	public static Vector<BaseListener> MonitorHandlers = new Vector<>();
 	
 	public static boolean registerListener(EventPriority priority, BaseListener listener){
 		if(!(listener instanceof BaseEvent)){
@@ -44,11 +44,11 @@ public class BaseManager {
 	}
 	
 	public static void unregisterAllListeners(){
-		lv0Handlers = new Vector();
-		lv1Handlers = new Vector();
-		lv2Handlers = new Vector();
-		lv3Handlers = new Vector();
-		lv4Handlers = new Vector();
+		lv0Handlers = new Vector<BaseListener>();
+		lv1Handlers = new Vector<BaseListener>();
+		lv2Handlers = new Vector<BaseListener>();
+		lv3Handlers = new Vector<BaseListener>();
+		lv4Handlers = new Vector<BaseListener>();
 		MonitorHandlers = new Vector<>();
 	}
 	

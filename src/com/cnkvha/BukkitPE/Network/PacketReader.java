@@ -19,12 +19,11 @@ public class PacketReader {
 	
 	public short readShort(){
 		if(this.checkLast(2) == false) return(0);
-		int byte1 = 0;
-		int byte2 = 0;
-		byte1 = (0x000000FF & ((int) this.packet[this.position]));
-		byte2 = (0x000000FF & ((int) this.packet[this.position + 1]));
+		byte[] b = new byte[2];
+		b[0] = (byte) (0xFF & this.packet[this.position]);
+		b[1] = (byte) (0xFF & this.packet[this.position + 1]);
 		this.position += 2;
-		return((short) ((byte1 << 16 | byte2) & 0xFFFF));
+		return(ByteBuffer.wrap(b).asShortBuffer().get());
 	}
 	
 	public String readString(){
@@ -42,7 +41,7 @@ public class PacketReader {
 		return(ret);
 	}
 	
-    public long readUnsignedInt() {  
+    public int readInt() {  
     	if(this.checkLast(4) == false) return(0);
         int firstByte = 0;  
         int secondByte = 0;  
@@ -53,7 +52,7 @@ public class PacketReader {
         thirdByte = (0x000000FF & ((int) this.packet[this.position + 2]));  
         fourthByte = (0x000000FF & ((int) this.packet[this.position + 3]));  
         this.position += 4;  
-        return ((long) (firstByte << 24 | secondByte << 16 | thirdByte << 8 | fourthByte)) & 0xFFFFFFFFL;  
+        return ((int) (firstByte << 24 | secondByte << 16 | thirdByte << 8 | fourthByte)) & 0xFFFF;  
     }
 
 	public long readLong(){
@@ -78,7 +77,7 @@ public class PacketReader {
 		b[1] = (byte) (0xFF & (this.packet[this.position + 1]));
 		b[2] = (byte) (0xFF & (this.packet[this.position] + 2));
 		this.position += 3;
-		return(Math.abs(ByteBuffer.wrap(b).asShortBuffer().get()));
+		return((int)(b[0] << 16 | b[1] << 8 | b[2]) & 0xFFFF);
 	}
 	public int readTriadReverse(){
 		if(this.checkLast(3) == false) return(0);
@@ -87,11 +86,26 @@ public class PacketReader {
 		b[1] = (byte) (0xFF & (this.packet[this.position + 1]));
 		b[0] = (byte) (0xFF & (this.packet[this.position] + 2));
 		this.position += 3;
-		return(Math.abs(ByteBuffer.wrap(b).asShortBuffer().get()));
+		return((int)(b[2] << 16 | b[1] << 8 | b[0]) & 0xFFFF);
 	}
     
+	public float readFloat(){
+		if(this.checkLast(8) == false) return(0.0f);
+		byte[] b = new byte[8];
+		b[0] = (byte) (0xFF & (this.packet[this.position]));
+		b[1] = (byte) (0xFF & (this.packet[this.position + 1]));
+		b[2] = (byte) (0xFF & (this.packet[this.position] + 2));
+		b[3] = (byte) (0xFF & (this.packet[this.position] + 3));
+		b[4] = (byte) (0xFF & (this.packet[this.position] + 4));
+		b[5] = (byte) (0xFF & (this.packet[this.position] + 5));
+		b[6] = (byte) (0xFF & (this.packet[this.position] + 6));
+		b[7] = (byte) (0xFF & (this.packet[this.position] + 7));
+		this.position += 8;
+		return(ByteBuffer.wrap(b).asFloatBuffer().get());
+	}
+	
 	public boolean checkLast(long last){
-		if(this.packet.length - this.position < last){
+		if(this.packet.length - this.position < last || last < 0){
 			return(false);
 		}else{
 			return(true);

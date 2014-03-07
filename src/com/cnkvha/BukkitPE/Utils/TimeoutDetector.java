@@ -18,7 +18,7 @@ public class TimeoutDetector extends Thread {
 			//Detect clients one by one
 			toDisconnect.clear();
 			for(Player p : ((PlayerAPI)APIManager.get("player")).clients.values()){
-				if(new Date().getTime() - p.lastRecv > 30000){
+				if(new Date().getTime() - p.lastRecv > 60000){
 					toDisconnect.add(p.ckey);
 				}
 			}
