@@ -38,6 +38,7 @@ public class PacketReader {
 		if(this.checkLast(len) == false) return(new byte[1]);
 		byte[] ret = new byte[len];
 		System.arraycopy(this.packet, this.position, ret, 0, len);
+		this.position += len;
 		return(ret);
 	}
 	

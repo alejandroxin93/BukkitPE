@@ -89,7 +89,7 @@ public class Player {
 			while(true){
 				len = reader.readShort();
 				Log.Debug("SHORT=" + len);
-				reader.readTriadReverse();
+				this.sendACK(reader.readTriadReverse());
 				if(len == 0) break;
 				len = len / 8;
 				customPacket = reader.readBlock(len);
@@ -122,6 +122,9 @@ public class Player {
 			this.lastPing = reader.readLong();
 			response.writeLong(this.lastPing);
 			this.sendEncapPacket(response);
+			break;
+		case 0x15:
+			this.disconnect("client disconnect");
 			break;
 		case 0x09:
 			this.cid = reader.readLong();
