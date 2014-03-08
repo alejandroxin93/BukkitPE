@@ -21,8 +21,8 @@ public class PlayerAPI implements BaseAPI {
 		return("player");
 	}
 
-	public Player[] getAll(){
-		return (Player[]) (this.clients.values().toArray());
+	public Collection<Player> getAll(){
+		return this.clients.values();
 	}
 	
 	@Override

@@ -39,8 +39,8 @@ public class Player {
 	
 	public void sendChat(String chat){
 		PacketWriter pk = new PacketWriter(0x85);
-		pk.writeString(chat);
 		pk.writeString("");
+		pk.writeString(chat);
 		this.sendEncapPacket(pk);
 	}
 	
@@ -179,11 +179,10 @@ public class Player {
 			}
 			break;
 		case (byte) 0x85:
-			String msg = reader.readString();
-			String sender = reader.readString();
+			reader.readString();
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			data.put("sender", this.username);
-			data.put("message", msg);
+			data.put("message", reader.readString());
 			EventSystem.callHandler("player.chat", data);
 			//Log.Info(this.username + ": " + );
 			break;
@@ -210,6 +209,7 @@ public class Player {
 		ack.writeShort((short) 0x01);
 		ack.writeByte((byte) 0x01);
 		ack.writeTriadReverse(pNum);
+		this.sendPacket(ack);
 		this.sendPacket(ack);
 	}
 	

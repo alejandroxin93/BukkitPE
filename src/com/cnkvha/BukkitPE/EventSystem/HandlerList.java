@@ -32,6 +32,7 @@ public class HandlerList {
 			return(false);
 		}
 		HandlerElement handler = new HandlerElement(this.eventName, priority, instance, methodName);
+		if(!(this.list.containsKey(priority))) this.list.put(priority, new ArrayList<HandlerElement>());
 		this.list.get(priority).add(handler);
 		return(true);
 	}
@@ -53,35 +54,47 @@ public class HandlerList {
 	
 	public boolean callEvent(HashMap<String, Object> data){
 		Iterator<HandlerElement> iterator;
-		iterator = list.get(EventPriority.MONITOR).iterator();
 		int status = CancelStatus.NOT_CANCELLED;
-		while(iterator.hasNext()){
-			iterator.next().invoke(data);
+		if(list.containsKey(EventPriority.MONITOR)){
+			iterator = list.get(EventPriority.MONITOR).iterator();
+			while(iterator.hasNext()){
+				iterator.next().invoke(data);
+			}
 		}
-		iterator = list.get(EventPriority.HIGHEST).iterator();
-		while(iterator.hasNext()){
-			status = iterator.next().invoke(data);
-			if(status == CancelStatus.FORCE_CANCELLED) return(false);
+		if(list.containsKey(EventPriority.HIGHEST)){
+			iterator = list.get(EventPriority.HIGHEST).iterator();
+			while(iterator.hasNext()){
+				status = iterator.next().invoke(data);
+				if(status == CancelStatus.FORCE_CANCELLED) return(false);
+			}
 		}
-		iterator = list.get(EventPriority.HIGH).iterator();
-		while(iterator.hasNext()){
-			status = iterator.next().invoke(data);
-			if(status == CancelStatus.FORCE_CANCELLED) return(false);
+		if(list.containsKey(EventPriority.HIGH)){
+			iterator = list.get(EventPriority.HIGH).iterator();
+			while(iterator.hasNext()){
+				status = iterator.next().invoke(data);
+				if(status == CancelStatus.FORCE_CANCELLED) return(false);
+			}
 		}
-		iterator = list.get(EventPriority.NORMAL).iterator();
-		while(iterator.hasNext()){
-			status = iterator.next().invoke(data);
-			if(status == CancelStatus.FORCE_CANCELLED) return(false);
+		if(list.containsKey(EventPriority.NORMAL)){
+			iterator = list.get(EventPriority.NORMAL).iterator();
+			while(iterator.hasNext()){
+				status = iterator.next().invoke(data);
+				if(status == CancelStatus.FORCE_CANCELLED) return(false);
+			}
 		}
-		iterator = list.get(EventPriority.LOW).iterator();
-		while(iterator.hasNext()){
-			status = iterator.next().invoke(data);
-			if(status == CancelStatus.FORCE_CANCELLED) return(false);
+		if(list.containsKey(EventPriority.LOW)){
+			iterator = list.get(EventPriority.LOW).iterator();
+			while(iterator.hasNext()){
+				status = iterator.next().invoke(data);
+				if(status == CancelStatus.FORCE_CANCELLED) return(false);
+			}
 		}
-		iterator = list.get(EventPriority.LOWEST).iterator();
-		while(iterator.hasNext()){
-			status = iterator.next().invoke(data);
-			if(status == CancelStatus.FORCE_CANCELLED) return(false);
+		if(list.containsKey(EventPriority.LOWEST)){
+			iterator = list.get(EventPriority.LOWEST).iterator();
+			while(iterator.hasNext()){
+				status = iterator.next().invoke(data);
+				if(status == CancelStatus.FORCE_CANCELLED) return(false);
+			}
 		}
 		return(status == CancelStatus.CANCELLED ? false : true);
 	}

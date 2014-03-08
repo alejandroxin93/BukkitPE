@@ -1,6 +1,5 @@
 package com.cnkvha.BukkitPE.EventSystem;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import com.cnkvha.BukkitPE.Debugging.Log;
@@ -28,7 +27,6 @@ public class EventSystem {
 		if(eventName == null) return(false);
 		if(data == null) data = new HashMap<String, Object>();
 		if(!handlers.containsKey(eventName)) return(true); //If no handlers registered, return true directly
-		
-		return(true);
+		return(handlers.get(eventName).callEvent(data));
 	}
 }
