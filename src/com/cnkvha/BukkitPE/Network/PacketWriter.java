@@ -75,7 +75,7 @@ public class PacketWriter {
 	}
 	
 	public void writeFloat(float value){
-		this.writeBlock(ByteBuffer.allocate(8).putFloat(value).array());
+		this.writeBlock(ByteBuffer.allocate(4).putFloat(value).array());
 	}
 	
 	public void writeNullBytes(int len){

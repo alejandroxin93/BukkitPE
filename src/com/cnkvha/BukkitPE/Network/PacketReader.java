@@ -77,7 +77,7 @@ public class PacketReader {
 		b[1] = (byte) (0xFF & (this.packet[this.position + 1]));
 		b[2] = (byte) (0xFF & (this.packet[this.position] + 2));
 		this.position += 3;
-		return((int)(b[0] << 16 | b[1] << 8 | b[2]) & 0xFFFF);
+		return((int)(b[0] << 24 | b[1] << 16 | b[2]) & 0xFFFF);
 	}
 	public int readTriadReverse(){
 		if(this.checkLast(3) == false) return(0);
@@ -86,21 +86,17 @@ public class PacketReader {
 		b[1] = (byte) (0xFF & (this.packet[this.position + 1]));
 		b[0] = (byte) (0xFF & (this.packet[this.position] + 2));
 		this.position += 3;
-		return((int)(b[2] << 16 | b[1] << 8 | b[0]) & 0xFFFF);
+		return((int)(b[2] << 24 | b[1] << 16 | b[0]) & 0xFFFF);
 	}
     
 	public float readFloat(){
-		if(this.checkLast(8) == false) return(0.0f);
-		byte[] b = new byte[8];
+		if(this.checkLast(4) == false) return(0.0f);
+		byte[] b = new byte[4];
 		b[0] = (byte) (0xFF & (this.packet[this.position]));
 		b[1] = (byte) (0xFF & (this.packet[this.position + 1]));
 		b[2] = (byte) (0xFF & (this.packet[this.position] + 2));
 		b[3] = (byte) (0xFF & (this.packet[this.position] + 3));
-		b[4] = (byte) (0xFF & (this.packet[this.position] + 4));
-		b[5] = (byte) (0xFF & (this.packet[this.position] + 5));
-		b[6] = (byte) (0xFF & (this.packet[this.position] + 6));
-		b[7] = (byte) (0xFF & (this.packet[this.position] + 7));
-		this.position += 8;
+		this.position += 4;
 		return(ByteBuffer.wrap(b).asFloatBuffer().get());
 	}
 	

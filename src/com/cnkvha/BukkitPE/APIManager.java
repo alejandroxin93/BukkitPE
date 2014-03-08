@@ -18,6 +18,7 @@ public class APIManager {
 	
 	public static void loadAllAPIs(){
 		loadAPI(new PlayerAPI());
+		loadAPI(new ChatAPI());
 	}
 	
 	public static void loadAPI(BaseAPI api){

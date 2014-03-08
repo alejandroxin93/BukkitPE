@@ -1,10 +1,14 @@
 package com.cnkvha.BukkitPE.EventSystem;
 
-import com.cnkvha.BukkitPE.EventSystem.DefaultListeners.DefaultPlayerConnectEvent;
-import com.cnkvha.BukkitPE.EventSystem.Managers.PlayerConnectEventManager;
+import java.util.HashMap;
 
 public class DefaultEvents {
-	public static void registerAllDefaultEvents(){
-		PlayerConnectEventManager.registerListener(EventPriority.LOWEST, new DefaultPlayerConnectEvent());
+	public void registerAllDefaultEvents(){
+		EventSystem.registerEvent("player.chat", EventPriority.NORMAL, this, "onPlayerChat");
+	}
+	
+	public int onPlayerChat(HashMap<String, Object> data){
+		
+		return(CancelStatus.NOT_CANCELLED);
 	}
 }

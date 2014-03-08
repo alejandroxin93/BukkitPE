@@ -2,7 +2,6 @@ package com.cnkvha.BukkitPE;
 
 import java.net.DatagramPacket;
 import java.net.SocketAddress;
-import java.net.SocketException;
 
 import com.cnkvha.BukkitPE.APIs.PlayerAPI;
 import com.cnkvha.BukkitPE.Debugging.Log;

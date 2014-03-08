@@ -36,6 +36,7 @@ public class UDPListener extends Thread {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void registerRecvEvent(UDPRecvEventListener l){
 		this.repo.addElement(l);
 	}

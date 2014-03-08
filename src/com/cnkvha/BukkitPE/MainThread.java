@@ -24,7 +24,7 @@ public class MainThread extends Thread{
 		Definations.timeoutDetector = new TimeoutDetector();
 		Definations.timeoutDetector.start();
 		Log.Info("Registering default event listeners...");
-		DefaultEvents.registerAllDefaultEvents();
+		new DefaultEvents().registerAllDefaultEvents();
 		Definations.socket.registerRecvEvent(new RecvListener());
 		Definations.socket.start();
 	}

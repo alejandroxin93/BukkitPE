@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.util.EventObject;
 
 public class UDPRecvEvent extends EventObject {
+	private static final long serialVersionUID = -4182501186470307242L;
 	private DatagramPacket pk;
 	public UDPRecvEvent(DatagramPacket packet) {
 		super((Object)packet);

@@ -1,11 +1,7 @@
 package com.cnkvha.BukkitPE.EventSystem;
 
-public enum CancelStatus {
-	NOT_CANCELLED(0),
-	CANCELLED(1),
-	FORCE_CANCELLED(2);
-	
-	private CancelStatus(int slot) {
-		// TODO Auto-generated constructor stub
-	}
+public class CancelStatus {
+	public final static int NOT_CANCELLED = 0;
+	public final static int CANCELLED = 1;
+	public final static int FORCE_CANCELLED = 2;
 }

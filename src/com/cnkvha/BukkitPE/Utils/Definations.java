@@ -1,11 +1,6 @@
 package com.cnkvha.BukkitPE.Utils;
 
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.HashMap;
-
 import com.cnkvha.BukkitPE.MainThread;
-import com.cnkvha.BukkitPE.Player;
 import com.cnkvha.BukkitPE.Network.UDPListener;
 
 public class Definations {

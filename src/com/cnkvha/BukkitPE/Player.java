@@ -1,16 +1,13 @@
 package com.cnkvha.BukkitPE;
 
 import java.net.SocketAddress;
-import java.sql.Time;
 import java.util.Date;
 
 import com.cnkvha.BukkitPE.APIs.PlayerAPI;
 import com.cnkvha.BukkitPE.Debugging.Log;
-import com.cnkvha.BukkitPE.EventSystem.Managers.PlayerConnectEventManager;
 import com.cnkvha.BukkitPE.Network.PacketReader;
 import com.cnkvha.BukkitPE.Network.PacketWriter;
 import com.cnkvha.BukkitPE.Utils.Definations;
-import com.sun.java.util.jar.pack.PackerImpl;
 
 public class Player {
 	public SocketAddress clientAddr;
@@ -23,6 +20,7 @@ public class Player {
 	
 	private int packetNum = 0x000000;
 	public long lastRecv = 0;
+	public long lastPing = 0;
 
 	private boolean connected = false;
 	private boolean loggedIn = false;
@@ -39,7 +37,8 @@ public class Player {
 	public void disconnect(String reason){
 		if(reason == null) reason = "unknown";
 		if(this.loggedIn){
-			//TODO: Send 0x15 packet
+			PacketWriter pk = new PacketWriter(0x15);
+			this.sendEncapPacket(pk);
 		}
 		PlayerAPI playerAPI= (PlayerAPI)APIManager.get("player");
 		playerAPI.clients.remove(this.ckey);
@@ -49,7 +48,7 @@ public class Player {
 	public void handleDataPacket(byte[] packet){
 		PacketReader reader = new PacketReader(packet);
 		reader.readByte(); //Skip PID section
-		this.packetNum = reader.readTriadReverse();
+		this.packetNum = reader.readTriadReverse() - 2;
 		this.sendACK(this.packetNum); //Send ACK
 		byte encapsulateType = reader.readByte();
 		int len = 0;
@@ -95,6 +94,13 @@ public class Player {
 		byte pid = reader.readByte();
 		Log.Debug("Got encapsulated packet: 0x" + Integer.toHexString((int)pid));
 		switch(pid){
+		case 0x00:  //Ping!
+			response = new PacketWriter(0x03); //Pong!
+			response.writeLong(this.lastPing);
+			this.lastPing = reader.readLong();
+			response.writeLong(this.lastPing);
+			this.sendEncapPacket(response);
+			break;
 		case 0x09:
 			this.cid = reader.readLong();
 			this.session = reader.readLong();
@@ -128,13 +134,13 @@ public class Player {
 			this.pcid = reader.readInt();
 			this.loginData = reader.readString();
 			response = new PacketWriter(0x83);
-			if(PlayerConnectEventManager.callEvent(this.username)){
+			if(true){//PlayerConnectEventManager.callEvent(this.username)
 				response.writeInt(0x00);
 				this.sendEncapPacket(response);
 				response = new PacketWriter(0x87);
 				response.writeInt(0x00);
 				response.writeInt(0x00);
-				response.writeInt(0x00);
+				response.writeInt(0x01);
 				response.writeInt(0x00);
 				response.writeFloat(128.0f);
 				response.writeFloat(64.0f);
@@ -142,11 +148,18 @@ public class Player {
 				this.sendEncapPacket(response);
 				this.loggedIn = true;
 				Log.Info("Player " + this.username + "[" + this.clientAddr.toString() + "] joined the game. ");
+				/*
 			}else{
 				response.writeInt(0x02);
 				this.sendEncapPacket(response);
 				this.disconnect("denied to join");
+				*/
 			}
+			break;
+		case (byte) 0x85:
+			String msg = reader.readString();
+			String sender = reader.readString();
+			//Log.Info(this.username + ": " + );
 			break;
 		}
 	}
