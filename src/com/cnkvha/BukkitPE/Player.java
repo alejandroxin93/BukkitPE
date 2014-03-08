@@ -2,9 +2,11 @@ package com.cnkvha.BukkitPE;
 
 import java.net.SocketAddress;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.cnkvha.BukkitPE.APIs.PlayerAPI;
 import com.cnkvha.BukkitPE.Debugging.Log;
+import com.cnkvha.BukkitPE.EventSystem.EventSystem;
 import com.cnkvha.BukkitPE.Network.PacketReader;
 import com.cnkvha.BukkitPE.Network.PacketWriter;
 import com.cnkvha.BukkitPE.Utils.Definations;
@@ -34,6 +36,14 @@ public class Player {
 		Log.Debug("New connection from " + clientKey + ", CID=" + Long.toString(clientID) + ". ");
 	}
 	
+	
+	public void sendChat(String chat){
+		PacketWriter pk = new PacketWriter(0x85);
+		pk.writeString(chat);
+		pk.writeString("");
+		this.sendEncapPacket(pk);
+	}
+	
 	public void disconnect(String reason){
 		if(reason == null) reason = "unknown";
 		if(this.loggedIn){
@@ -44,6 +54,18 @@ public class Player {
 		playerAPI.clients.remove(this.ckey);
 		Log.Info("Player " + this.username + "[" + this.clientAddr.toString() + "] left the game, reason: " + reason);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public void handleDataPacket(byte[] packet){
 		PacketReader reader = new PacketReader(packet);
@@ -159,14 +181,14 @@ public class Player {
 		case (byte) 0x85:
 			String msg = reader.readString();
 			String sender = reader.readString();
+			HashMap<String, Object> data = new HashMap<String, Object>();
+			data.put("sender", this.username);
+			data.put("message", msg);
+			EventSystem.callHandler("player.chat", data);
 			//Log.Info(this.username + ": " + );
 			break;
 		}
 	}
-	
-	
-	
-	
 	
 	
 	
